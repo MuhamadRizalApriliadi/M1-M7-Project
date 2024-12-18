@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pemesanan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container, .resume-container {
+            width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .form-container h2, .resume-container h2 {
+            font-size: 24px;
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-size: 14px;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group .inline-group {
+            display: flex;
+            align-items: center;
+        }
+        .form-group .inline-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .form-actions button {
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .form-actions .btn-save {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .form-actions .btn-save:hover {
+            background-color: #0056b3;
+        }
+        .form-actions .btn-cancel {
+            background-color: #ffc107;
+            color: #333333;
+        }
+        .form-actions .btn-cancel:hover {
+            background-color: #e0a800;
+        }
+        .resume-container {
+            display: none;
+        }
+        .resume-data {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }        
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Form Pemesanan</h2>
+        <form id="formPemesanan">
+            <div class="form-group">
+                <label for="id_pemesanan">Id Pemesan:</label>
+                <input type="number" id="id_pemesanan" name="id_pemesanan" value="1" readonly>
+            </div>
+            <div class="form-group">
+                <label for="nama_pemesan">Nama Pemesan:</label>
+                <input type="text" id="nama_pemesan" name="nama_pemesan" required>
+            </div>
+            <div class="form-group">
+                <label>Jenis Kelamin:</label>
+                <div class="inline-group">
+                    <input type="radio" id="gender_male" name="jenis_kelamin" value="Laki-laki" required>
+                    <label for="gender_male">Laki-laki</label>
+                    <input type="radio" id="gender_female" name="jenis_kelamin" value="Perempuan" required>
+                    <label for="gender_female">Perempuan</label>
+                </div>
+            </div>            
+            <div class="form-group">
+                <label for="nomor_identitas">Nomor Identitas:</label>
+                <input type="text" id="nomor_identitas" name="nomor_identitas" maxlength="16" required>
+                <div class="error" id="errorIdentitas"></div>
+            </div>
+            <div class="form-group">
+                <label for="tipe_kamar">Tipe Kamar:</label>
+                <select id="tipe_kamar" name="tipe_kamar" required>
+                    <option value="">--Pilih--</option>
+                    <option value="standard">STANDAR</option>
+                    <option value="deluxe">DELUXE</option>
+                    <option value="family">FAMILY</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="harga">Harga:</label>
+                <input type="number" id="harga" name="harga" readonly>
+            </div>
+            <div class="form-group">
+                <label for="tanggal_pesan">Tanggal Pesan:</label>
+                <input type="date" id="tanggal_pesan" name="tanggal_pesan" required>
+            </div>
+            <div class="form-group">
+                <label for="durasi_menginap">Durasi Menginap:</label>
+                <input type="number" id="durasi_menginap" name="durasi_menginap" required>
+            </div>
+            <div class="form-group inline-group">
+                <input type="checkbox" id="breakfast" name="breakfast">
+                <label for="breakfast">Termasuk Breakfast</label>
+            </div>
+            <div class="form-group">
+                <label for="total_bayar">Total Bayar:</label>
+                <input type="text" id="total_bayar" name="total_bayar" readonly>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-save" onclick="simpanData()">Simpan</button>
+                <button type="reset" class="btn-cancel" onclick="resetForm()">Batal</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="resume-container" id="resumeContainer">
+        <h2>Resume Pemesanan</h2>
+        <div class="resume-data" id="resumeData"></div>
+    </div>
+
+    <script>
+        function simpanData() {
+            const identitas = document.getElementById("nomor_identitas").value;
+            const nama = document.getElementById("nama_pemesan").value;
+            const jenisKelamin = document.querySelector('input[name="jenis_kelamin"]:checked');
+            const tipeKamar = document.getElementById("tipe_kamar").value;
+            const tanggalPesan = document.getElementById("tanggal_pesan").value;
+            const durasi = parseInt(document.getElementById("durasi_menginap").value) || 0;
+            const breakfast = document.getElementById("breakfast").checked;
+    
+            const errorIdentitas = document.getElementById("errorIdentitas");
+            errorIdentitas.textContent = ""; // Reset error message
+                
+            if (identitas.length !== 16 || isNaN(identitas)) {
+                errorIdentitas.textContent = "Nomor identitas harus terdiri dari 16 digit angka.";
+                return;
+            }
+            
+            if (!jenisKelamin) {
+                 alert("Silakan pilih jenis kelamin.");
+                 return;
+            }
+
+            if (!tipeKamar) {
+                alert("Silakan pilih tipe kamar.");
+                return;
+            }
+    
+            let hargaKamar = 0;
+            if (tipeKamar === "standard") hargaKamar = 500000;
+            if (tipeKamar === "deluxe") hargaKamar = 750000;
+            if (tipeKamar === "family") hargaKamar = 1000000;
+    
+            let total = hargaKamar * durasi;
+            if (durasi > 3) total *= 0.1; // Diskon 10% jika lebih dari 3 malam
+            if (breakfast) total += 80000;
+    
+            // Tampilkan hasil di form
+            document.getElementById("harga").value = hargaKamar;
+            document.getElementById("total_bayar").value = total.toLocaleString("id-ID");
+    
+            // Tampilkan resume
+            const resumeContainer = document.getElementById("resumeContainer");
+            const resumeData = document.getElementById("resumeData");
+    
+            resumeData.innerHTML = `
+            <p><strong>Id Pemesan:</strong> ${document.getElementById("id_pemesanan").value}</p>
+            <p><strong>Nama Pemesan:</strong> ${nama}</p>
+            <p><strong>Nomor Identitas:</strong> ${identitas}</p>
+            <p><strong>Jenis Kelamin:</strong> ${jenisKelamin.value}</p>
+            <p><strong>Tipe Kamar:</strong> ${tipeKamar}</p>
+            <p><strong>Harga Kamar:</strong> Rp${hargaKamar.toLocaleString("id-ID")}</p>
+            <p><strong>Tanggal Pesan:</strong> ${tanggalPesan}</p>
+            <p><strong>Durasi Menginap:</strong> ${durasi} malam</p>
+            <p><strong>Termasuk Breakfast:</strong> ${breakfast ? "Ya" : "Tidak"}</p>
+            <p><strong>Total Bayar:</strong> Rp${total.toLocaleString("id-ID")}</p>
+        `;
+
+    
+            resumeContainer.style.display = "block";
+        }
+    
+        function resetForm() {
+            document.getElementById("resumeContainer").style.display = "none";
+            document.getElementById("errorIdentitas").textContent = "";
+        }
+    </script>
+    
+</body>
+</html>

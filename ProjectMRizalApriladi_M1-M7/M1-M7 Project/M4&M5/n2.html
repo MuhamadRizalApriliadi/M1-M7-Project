@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 450px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select{
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        input {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f8ff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tambah Data Kamar dan Fasilitas</h2>
+        <form id="dataForm">
+            <div class="form-group">
+                <label for="roomNumber">Nomor Kamar</label>
+                <input type="text" id="roomNumber" name="roomNumber" placeholder="Masukkan nomor kamar">
+                <span id="roomNumberError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="roomType">Jenis Kamar</label>
+                <select id="roomType" name="roomType">
+                    <option value="">Pilih jenis kamar</option>
+                    <option value="Single">Single</option>
+                    <option value="Double">Double</option>
+                    <option value="Suite">Suite</option>
+                </select>
+                <span id="roomTypeError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="price">Harga per Malam</label>
+                <input type="number" id="price" name="price" placeholder="Masukkan harga">
+                <span id="priceError" class="error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="facilityName">Nama Fasilitas</label>
+                <input type="text" id="facilityName" name="facilityName" placeholder="Masukkan nama fasilitas">
+                <span id="facilityNameError" class="error"></span>
+            </div>
+            <button type="button" onclick="validateAndSubmit()">Submit</button>
+        </form>
+
+        <div id="result" class="result" style="display: none;">
+            <h3>Data yang Dimasukkan:</h3>
+            <p id="resultData"></p>
+        </div>
+    </div>
+
+    <script>
+        function validateAndSubmit() {
+            let isValid = true;
+
+            const roomNumber = document.getElementById("roomNumber").value.trim();
+            const roomType = document.getElementById("roomType").value;
+            const price = document.getElementById("price").value.trim();
+            const facilityName = document.getElementById("facilityName").value.trim();
+
+            document.getElementById("roomNumberError").textContent = "";
+            document.getElementById("roomTypeError").textContent = "";
+            document.getElementById("priceError").textContent = "";
+            document.getElementById("facilityNameError").textContent = "";
+
+            if (roomNumber === "") {
+                document.getElementById("roomNumberError").textContent = "Nomor kamar harus diisi.";
+                isValid = false;
+            }
+            if (roomType === "") {
+                document.getElementById("roomTypeError").textContent = "Jenis kamar harus dipilih.";
+                isValid = false;
+            }
+            if (price === "" || isNaN(price) || price <= 0) {
+                document.getElementById("priceError").textContent = "Masukkan harga yang valid.";
+                isValid = false;
+            }
+            if (facilityName === "") {
+                document.getElementById("facilityNameError").textContent = "Nama fasilitas harus diisi.";
+                isValid = false;
+            }
+
+            if (isValid) {
+                const resultDiv = document.getElementById("result");
+                const resultData = `
+                    <strong>Kamar:</strong><br>
+                    Nomor Kamar: ${roomNumber}<br>
+                    Jenis Kamar: ${roomType}<br>
+                    Harga per Malam: Rp${price}<br><br>
+                    <strong>Fasilitas:</strong><br>
+                    Nama Fasilitas: ${facilityName}<br>
+                `;
+                document.getElementById("resultData").innerHTML = resultData;
+                resultDiv.style.display = "block";
+                document.getElementById("dataForm").reset();
+            }
+        }
+    </script>
+</body>
+</html>
